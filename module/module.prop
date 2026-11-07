@@ -1,0 +1,6 @@
+id=refresh_lock_120
+name=Refresh Rate Lock
+version=v1.0.0
+versionCode=1
+author=flixztried
+description=Locks the display to a 120Hz refresh rate system-wide and disables SurfaceFlinger idle/touch-timer downscaling.

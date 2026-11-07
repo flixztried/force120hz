@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build flashable ZIP
+        run: |
+          set -euo pipefail
+          chmod 0755 module/service.sh
+          VERSION=$(awk -F= '/^version=/ {print $2; exit}' module/module.prop)
+          ZIP="refresh_lock_120-${VERSION}.zip"
+          cd module
+          zip -j "../$ZIP" module.prop system.prop service.sh
+          cd ..
+          echo "Built $ZIP"
+          unzip -l "$ZIP"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: refresh_lock_120-*.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
